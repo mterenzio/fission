@@ -1,0 +1,20 @@
+{
+    "name": "Fission",
+    "version": "0.1.0",
+    "author": "Matt Terenzio",
+    "description": "Atomic Units of News",
+    "private": true,
+    "scripts": {
+        "start": "node ./server.js"
+    },
+    "dependencies" : {
+        "express"       : "*",
+        "mongoose"      : "*",
+        "body-parser"   : "*",
+        "jade"   : "*",
+        "formidable"   : "*",
+        "mongoose-admin" : "*",
+        "csvtojson" : "*"
+    },
+    "license": "MIT"
+}
