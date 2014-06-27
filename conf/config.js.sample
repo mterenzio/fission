@@ -1,0 +1,13 @@
+module.exports = {
+  database: {
+    host: "127.0.0.1",
+    user: "dbuser",
+    pass: "dbpass",
+    port: '27017',
+    name: 'dbname'
+  },
+  client: {
+    user: 'username',
+    pass: 'password'
+  }
+};
