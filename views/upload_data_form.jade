@@ -1,0 +1,12 @@
+doctype html
+html
+    head
+        title Upload Form
+        script(type='text/javascript' src="/js/dropzone.js")
+        link(rel='stylesheet', href="/lib/bootstrap/bootstrap.min.css")
+    body
+        h1 Upload File
+        form(method="POST", class="dropzone", action="/api/datauploader", enctype="multipart/form-data")
+          div(class="fallback")
+            input(type="file", name="file")
+            input(type="submit")
