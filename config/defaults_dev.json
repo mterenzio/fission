@@ -1,0 +1,16 @@
+{
+    "db": {
+        "mongodb": {
+            "url": "mongodb://localhost:27017/data",
+            "collections":{},
+            "dbOptions": {
+                "auto_reconnect": true,
+                "poolSize": 20,
+                "socketOptions": {"keepAlive": 1}
+            }
+        }
+    },
+    "main": {
+        "port": 4000
+    }
+}
