@@ -76,6 +76,8 @@ db.connectDatabase(function(db){
         )
     };
 
+    //register routes
+    require('./routes').routes(app);
     //configureControllers(app);
 
     // Setup Express error handler middleware!
