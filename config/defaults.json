@@ -1,7 +1,7 @@
 {
     "db": {
         "mongodb": {
-            "url": "mongodb://localhost:27017/data",
+            "url": "mongodb://localhost:27017/fission",
             "collections":{},
             "dbOptions": {
                 "auto_reconnect": true,

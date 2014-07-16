@@ -6,7 +6,8 @@ var userSchema = new Schema({
     username: {type:String, required : true},
     email: {type:String, required: true},
     password: {type: String, required: true},
-    apiKey: String
+    apiKey: String,
+    models: []
 });
 
 userSchema.pre("save",function(next, done) {
