@@ -91,5 +91,70 @@ module.exports = {
         model.find({}, function(err, results){
             res.send(results);
         })
+    },
+
+    getData: function(req, res, next){
+        var model = req.model;
+        model.findOne({_id: req.params.id}, function(err, result){
+            if(err)
+                return next(new customError.Database(err));
+
+            if(result==null)
+            return next(new customError.InvalidArgument("Data does not exist."));
+
+            res.send(result);
+        })
+    },
+
+    updateData: function(req, res, next){
+        var model = req.model;
+        model.findOne({_id: req.params.id}, function(err, result){
+            if(err)
+                return next(new customError.Database(err));
+
+            if(result==null)
+                return next(new customError.InvalidArgument("Data does not exist."));
+
+            var data = req.body;
+            for(var key in data){
+                if(result[key])
+                result[key] = data[key];
+            }
+
+            result.save(function(err, updatedRecord){
+                if(err)
+                    return next(new customError.Database(err));
+
+                res.send(updatedRecord);
+            })
+        })
+    },
+
+    deleteData: function(req, res, next){
+        var model = req.model;
+        model.findOne({_id: req.params.id}, function(err, result){
+            if(err)
+                return next(new customError.Database(err));
+
+            if(result==null)
+                return next(new customError.InvalidArgument("Data does not exist."));
+
+            result.remove(function(err){
+                if(err)
+                    return next(new customError.Database(err));
+
+                res.send({status: "Record has been deleted."})
+            })
+        })
+    },
+
+    queryData: function(req, res, next){
+        var model = req.model;
+        model.find(req.body, function(err, results){
+            if(err)
+                return next(new customError.Database(err));
+
+            res.send(results);
+        })
     }
 }
