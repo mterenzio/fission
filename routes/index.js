@@ -23,7 +23,7 @@ module.exports.routes = function(app){
     router.put("/:modelname/:id", middleWares, userController.updateData);
     router.delete("/:modelname/:id", middleWares, userController.deleteData);
     router.post("/:modelname/query", verifyModelExist, userController.queryData);
-    //app.use('/api', router);
+    app.use('/', router);
 }
 
 function verifyUserModel(req, res, next){
