@@ -13,7 +13,7 @@ module.exports = {
         u.password = passwordHash.generate(data.password);
         u.save(function(err){
             if(err)
-                return next(new customError.Database(err));
+                return next(new customError.Database("User already exist with either same username or email."));
 
             res.send({status:"User have been registered successfully."})
         })
@@ -47,31 +47,37 @@ module.exports = {
                 var fileContents = fs.readFileSync(filePath);
                 var filenameParts = filename.split('.');
                 var modelName = filenameParts[0].replace(/^[a-z]/, function(m){ return m.toUpperCase() });
-                User.findOne({_id: req.userId}, function(err, user){
-                    if(err || user == null)
-                        return next(new customError.Database("User does not exist"));
+                User.findeOne({models:modelName}, function(err, user){
+                    if(err || user!=null)
+                        return next(new customError.Database("Model already exist with same name."));
 
-                    var index = user.models.indexOf(modelName);
-                    if(index > -1)
-                        return next(new customError.InvalidContent("You have already created model with same name"));
+                    User.findOne({_id: req.userId}, function(err, user){
+                        if(err || user == null)
+                            return next(new customError.Database("User does not exist"));
 
-                    var newfile = "// app/models/" + modelName + ".js\n\n";
-                    newfile += "var mongoose     = require('mongoose');\n";
-                    newfile += "var Schema       = mongoose.Schema;\n";
-                    newfile += "var " + modelName + "Schema   = new Schema(";
-                    newfile += fileContents;
-                    newfile += ");\n";
-                    newfile += "module.exports = mongoose.model('" + modelName + "', " + modelName + "Schema);"
-                    var target_path = path.join("./model/", modelName+".js");
+                        var index = user.models.indexOf(modelName);
+                        if(index > -1)
+                            return next(new customError.InvalidContent("You have already created model with same name"));
 
-                    fs.writeFileSync(target_path, newfile);
-                    fs.unlink(filePath, function(err) {
-                        user.models.push(modelName.toLowerCase());
-                        user.save(function(err){
-                            res.send({status:"Model has been created."});
-                        })
-                    });
+                        var newfile = "// app/models/" + modelName + ".js\n\n";
+                        newfile += "var mongoose     = require('mongoose');\n";
+                        newfile += "var Schema       = mongoose.Schema;\n";
+                        newfile += "var " + modelName + "Schema   = new Schema(";
+                        newfile += fileContents;
+                        newfile += ");\n";
+                        newfile += "module.exports = mongoose.model('" + modelName + "', " + modelName + "Schema);"
+                        var target_path = path.join("./model/", modelName+".js");
+
+                        fs.writeFileSync(target_path, newfile);
+                        fs.unlink(filePath, function(err) {
+                            user.models.push(modelName.toLowerCase());
+                            user.save(function(err){
+                                res.send({status:"Model has been created."});
+                            })
+                        });
+                    })
                 })
+
             })
         })
     },
