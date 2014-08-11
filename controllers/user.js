@@ -58,7 +58,7 @@ module.exports = {
                         if(modelName.toLowerCase() == "storystream")
                             return next(new customError.InvalidContent("You can not create model with this name its reserved."));
 
-                        var index = user.models.indexOf(modelName);
+                        var index = user.models.indexOf(modelName.toLowerCase());
                         if(index > -1)
                             return next(new customError.InvalidContent("You have already created model with same name"));
 
