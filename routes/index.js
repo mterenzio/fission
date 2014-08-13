@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var userController = require('../controllers/user'),
+    storyStreamController = require('../controllers/storystream'),
     customError = require('../lib/custom_errors'),
     fs = require('fs'),
     path = require('path'),
@@ -23,6 +24,12 @@ module.exports.routes = function(app){
     router.put("/:modelname/:id", middleWares, userController.updateData);
     router.delete("/:modelname/:id", middleWares, userController.deleteData);
     router.post("/:modelname/query", verifyModelExist, userController.queryData);
+    router.post("/api/storystream", passport.authenticate('bearer', { session: false }), storyStreamController.addData);
+    router.get("/api/storystream/all", passport.authenticate('bearer', { session: false }), storyStreamController.getAllData);
+    router.get("/api/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.getData);
+    router.put("/api/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.updateData);
+    router.delete("/api/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.deleteData);
+    router.post("/storystream/query", passport.authenticate('bearer', { session: false }), storyStreamController.queryData);
     app.use('/', router);
 }
 

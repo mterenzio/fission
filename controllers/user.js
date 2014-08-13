@@ -50,7 +50,6 @@ module.exports = {
                 User.findeOne({models:modelName}, function(err, user){
                     if(err || user!=null)
                         return next(new customError.Database("Model already exist with same name."));
-
                     User.findOne({_id: req.userId}, function(err, user){
                         if(err || user == null)
                             return next(new customError.Database("User does not exist"));

@@ -8,7 +8,7 @@ var storyStreamSchema = new Schema({
     date_updated: {type: Date, default: Date.now()},
     items: [{
         item: {type: Schema.Types.ObjectId},
-        type: String,
+        item_type: String,
         date: {type: Date, default: Date.now()}
         }]
 });
