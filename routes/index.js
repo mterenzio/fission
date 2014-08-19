@@ -24,11 +24,11 @@ module.exports.routes = function(app){
     router.put("/:modelname/:id", middleWares, userController.updateData);
     router.delete("/:modelname/:id", middleWares, userController.deleteData);
     router.post("/:modelname/query", verifyModelExist, userController.queryData);
-    router.post("/api/storystream", passport.authenticate('bearer', { session: false }), storyStreamController.addData);
-    router.get("/api/storystream/all", passport.authenticate('bearer', { session: false }), storyStreamController.getAllData);
-    router.get("/api/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.getData);
-    router.put("/api/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.updateData);
-    router.delete("/api/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.deleteData);
+    router.post("/storystream", passport.authenticate('bearer', { session: false }), storyStreamController.addData);
+    router.get("/storystream/all", passport.authenticate('bearer', { session: false }), storyStreamController.getAllData);
+    router.get("/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.getData);
+    router.put("/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.updateData);
+    router.delete("/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.deleteData);
     router.post("/storystream/query", passport.authenticate('bearer', { session: false }), storyStreamController.queryData);
     app.use('/', router);
 }
