@@ -103,7 +103,7 @@ module.exports = {
 
     getAllData: function(req, res, next){
         var model = req.model;
-        model.find({is_public:true}, function(err, results){
+        model.find({$or:[{is_public:true},{id_creator:req.userId, is_public:false}]}, function(err, results){
             res.send(results);
         })
     },
@@ -167,12 +167,17 @@ module.exports = {
     queryData: function(req, res, next){
         var model = req.model;
         var data = req.body;
-        data["is_public"] = true;
         model.find(data, function(err, results){
             if(err)
                 return next(new customError.Database(err));
 
-            res.send(results);
+            var toReturn = [];
+            for(var i=0;i<results.length;i++){
+                var item = results[i];
+                if(item.is_public || item.id_creator == req.userId)
+                    toReturn.push(item);
+            }
+            res.send(toReturn);
         })
     }
 }

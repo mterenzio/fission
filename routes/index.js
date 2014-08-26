@@ -19,11 +19,11 @@ module.exports.routes = function(app){
     })
 
     router.post("/:modelname", middleWares, userController.addData);
-    router.get("/:modelname/all", verifyModelExist, userController.getAllData);
-    router.get("/:modelname/:id", verifyModelExist, userController.getData);
+    router.get("/:modelname/all", middleWares, userController.getAllData);
+    router.get("/:modelname/:id", middleWares, userController.getData);
     router.put("/:modelname/:id", middleWares, userController.updateData);
     router.delete("/:modelname/:id", middleWares, userController.deleteData);
-    router.post("/:modelname/query", verifyModelExist, userController.queryData);
+    router.post("/:modelname/query", middleWares, userController.queryData);
     router.post("/storystream", passport.authenticate('bearer', { session: false }), storyStreamController.addData);
     router.get("/storystream/all", passport.authenticate('bearer', { session: false }), storyStreamController.getAllData);
     router.get("/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.getData);
