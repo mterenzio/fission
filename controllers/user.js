@@ -47,7 +47,7 @@ module.exports = {
                 var fileContents = fs.readFileSync(filePath);
                 var filenameParts = filename.split('.');
                 var modelName = filenameParts[0].replace(/^[a-z]/, function(m){ return m.toUpperCase() });
-                User.findeOne({models:modelName}, function(err, user){
+                User.findOne({models:modelName}, function(err, user){
                     if(err || user!=null)
                         return next(new customError.Database("Model already exist with same name."));
                     User.findOne({_id: req.userId}, function(err, user){
@@ -61,12 +61,16 @@ module.exports = {
                         if(index > -1)
                             return next(new customError.InvalidContent("You have already created model with same name"));
 
+                        fileContents += ",\nis_public: {type:Boolean, default:true},";
+                        fileContents += "\ndate_created: {type:Date, default: Date.now()},";
+                        fileContents += "\ndate_updated: {type:Date, default: Date.now()},";
+                        fileContents += "\nid_creator: {type: Schema.Types.ObjectId, ref:'Users'}";
                         var newfile = "// app/models/" + modelName + ".js\n\n";
                         newfile += "var mongoose     = require('mongoose');\n";
                         newfile += "var Schema       = mongoose.Schema;\n";
-                        newfile += "var " + modelName + "Schema   = new Schema(";
+                        newfile += "var " + modelName + "Schema   = new Schema({";
                         newfile += fileContents;
-                        newfile += ");\n";
+                        newfile += "});\n";
                         newfile += "module.exports = mongoose.model('" + modelName + "', " + modelName + "Schema);"
                         var target_path = path.join("./model/", modelName+".js");
 
@@ -86,7 +90,10 @@ module.exports = {
 
     addData: function(req, res, next){
         var model = req.model;
-        new model(req.body).save(function(err, objectCreated){
+        var data = req.body;
+        data["id_creator"] = req.userId;
+
+        new model(data).save(function(err, objectCreated){
             if(err)
             return next(new customError.Database(err));
 
@@ -96,7 +103,7 @@ module.exports = {
 
     getAllData: function(req, res, next){
         var model = req.model;
-        model.find({}, function(err, results){
+        model.find({is_public:true}, function(err, results){
             res.send(results);
         })
     },
@@ -129,6 +136,7 @@ module.exports = {
                 result[key] = data[key];
             }
 
+            result["id_updated"] = Date.now();
             result.save(function(err, updatedRecord){
                 if(err)
                     return next(new customError.Database(err));
@@ -158,7 +166,9 @@ module.exports = {
 
     queryData: function(req, res, next){
         var model = req.model;
-        model.find(req.body, function(err, results){
+        var data = req.body;
+        data["is_public"] = true;
+        model.find(data, function(err, results){
             if(err)
                 return next(new customError.Database(err));
 

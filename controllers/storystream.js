@@ -155,7 +155,6 @@ module.exports = {
 function getModel(modelName, callback){
     var modelName = modelName.replace(/^[a-z]/, function(m){ return m.toUpperCase() });
     var filePath = path.join('./model/'+modelName+".js");
-    console.log(modelName);
     fs.exists(filePath, function(exist){
         console.log(exist);
         if(exist){
