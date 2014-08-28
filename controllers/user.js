@@ -103,7 +103,19 @@ module.exports = {
 
     getAllData: function(req, res, next){
         var model = req.model;
-        model.find({$or:[{is_public:true},{id_creator:req.userId, is_public:false}]}, function(err, results){
+        var condition = {};
+        if(req.is_authenticated)
+        condition = {
+            $or:[
+                {is_public:true},
+                {id_creator:req.userId, is_public:false}
+            ]};
+        else
+        condition = {
+            is_public:true
+        };
+
+        model.find(condition, function(err, results){
             res.send(results);
         })
     },
@@ -117,7 +129,14 @@ module.exports = {
             if(result==null)
             return next(new customError.InvalidArgument("Data does not exist."));
 
-            res.send(result);
+            if(req.is_authenticated)
+                res.send(result);
+            else{
+                if(!result.is_public)
+                    return next(new customError.NotAuthorized("You are not authorized to view this item."));
+
+                res.send(result);
+            }
         })
     },
 
@@ -174,8 +193,14 @@ module.exports = {
             var toReturn = [];
             for(var i=0;i<results.length;i++){
                 var item = results[i];
-                if(item.is_public || item.id_creator == req.userId)
-                    toReturn.push(item);
+                if(req.is_authenticated){
+                    if(item.is_public || item.id_creator == req.userId)
+                        toReturn.push(item);
+                }
+                else{
+                    if(item.is_public)
+                        toReturn.push(item);
+                }
             }
             res.send(toReturn);
         })
