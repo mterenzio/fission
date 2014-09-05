@@ -82,6 +82,7 @@ db.connectDatabase(function(db){
 
     // Setup Express error handler middleware!
     app.use(function(err, req, res, next){
+        console.log(err);
         res.send(err.code,{error:err});
     });
 

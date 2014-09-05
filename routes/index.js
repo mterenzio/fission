@@ -19,18 +19,18 @@ module.exports.routes = function(app){
         res.render("upload_form.jade");
     })
 
-    router.post("/:modelname", middleWares, userController.addData);
-    router.get("/:modelname/all", getMiddleWares, userController.getAllData);
-    router.get("/:modelname/:id", getMiddleWares, userController.getData);
-    router.put("/:modelname/:id", middleWares, userController.updateData);
-    router.delete("/:modelname/:id", middleWares, userController.deleteData);
-    router.post("/:modelname/query", getMiddleWares, userController.queryData);
     router.post("/storystream", passport.authenticate('bearer', { session: false }), storyStreamController.addData);
     router.get("/storystream/all", passport.authenticate('bearer', { session: false }), storyStreamController.getAllData);
     router.get("/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.getData);
     router.put("/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.updateData);
     router.delete("/storystream/:id", passport.authenticate('bearer', { session: false }), storyStreamController.deleteData);
     router.post("/storystream/query", passport.authenticate('bearer', { session: false }), storyStreamController.queryData);
+    router.post("/:modelname", middleWares, userController.addData);
+    router.get("/:modelname/all", getMiddleWares, userController.getAllData);
+    router.get("/:modelname/:id", getMiddleWares, userController.getData);
+    router.put("/:modelname/:id", middleWares, userController.updateData);
+    router.delete("/:modelname/:id", middleWares, userController.deleteData);
+    router.post("/:modelname/query", getMiddleWares, userController.queryData);
     app.use('/', router);
 }
 
