@@ -104,6 +104,8 @@ module.exports = {
     getAllData: function(req, res, next){
         var model = req.model;
         var condition = {};
+        var offset = req.query.offset ? req.query.offset : 0;
+        var limit = req.query.limit ? req.query.limit : 50;
         if(req.is_authenticated)
         condition = {
             $or:[
@@ -115,7 +117,11 @@ module.exports = {
             is_public:true
         };
 
-        model.find(condition, function(err, results){
+        model.find(
+            condition,
+            {},
+            {skip: offset*limit, limit: limit, sort:{date_created:-1}},
+            function(err, results){
             res.send(results);
         })
     },
@@ -186,7 +192,14 @@ module.exports = {
     queryData: function(req, res, next){
         var model = req.model;
         var data = req.body;
-        model.find(data, function(err, results){
+        var offset = req.query.offset ? req.query.offset : 0;
+        var limit = req.query.limit ? req.query.limit : 50;
+        var sortCondition = data.sort ? data.sort : {date_created:-1};
+        model.find(
+            data,
+            {},
+            {skip: offset*limit, limit: limit, sort:sortCondition},
+            function(err, results){
             if(err)
                 return next(new customError.Database(err));
 

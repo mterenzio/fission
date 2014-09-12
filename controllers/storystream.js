@@ -19,7 +19,12 @@ module.exports = {
 
     getAllData: function(req, res, next){
         var model = storyStreamModel;
-        model.find({}, function(err, results){
+        var offset = req.query.offset ? req.query.offset : 0;
+        var limit = req.query.limit ? req.query.limit : 50;
+        model.find(
+            {},
+            {skip: offset*limit, limit: limit, sort:{date_created:-1}},
+            function(err, results){
             if(err)
                 return next(new customError.Database(err));
 
@@ -122,7 +127,15 @@ module.exports = {
 
     queryData: function(req, res, next){
         var model = storyStreamModel;
-        model.find(req.body, function(err, results){
+        var offset = req.query.offset ? req.query.offset : 0;
+        var limit = req.query.limit ? req.query.limit : 50;
+        var data = req.body;
+        var sortCondition = data.sort ? data.sort : {date_created:-1};
+        model.find(
+            data,
+            {},
+            {skip: offset*limit, limit: limit, sort:sortCondition},
+            function(err, results){
             if(err)
                 return next(new customError.Database(err));
 
